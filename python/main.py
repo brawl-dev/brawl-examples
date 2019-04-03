@@ -1,12 +1,19 @@
-from websocket import create_connection
 import websocket
 import requests
 import json
+import os
+import dotenv
 
-r = requests.post('http://localhost:8080/', data={})
+dotenv.load_dotenv()
+
+r = requests.post('https://brawl.dev/api/games', json={
+    'id': os.getenv("BRAWL_ID"),
+    'secret': os.getenv("BRAWL_SECRET"),
+    'numEasyBots': 3
+})
 data = r.json()
 
-ws = create_connection(data['url'])
+ws = websocket.create_connection(data['url'])
 
 while True:
     try:
@@ -16,8 +23,9 @@ while True:
     print(
         "---Ticks Left: {ticksLeft}  Ring: ({position[x]}, {position[y]}) Radius: {radius}---".format(**data['ring']))
     for (index, player) in enumerate(data['players']):
-        print("{0}  ({position[x]}, {position[y]})".format(
-            index if player['alive'] else 'X', **player))
+        if player['alive']:
+            print("{0}  ({position[x]}, {position[y]})".format(
+                index, **player))
     ws.send(json.dumps({"thrust": 0, "torque": 0}))
 
 ws.close()

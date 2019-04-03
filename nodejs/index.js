@@ -1,11 +1,28 @@
 const axios = require("axios");
 const WebSocket = require("ws");
+require("dotenv").config();
 
-async function start() {
-  const {
-    data: { url }
-  } = await axios.post("http://localhost:8080", {});
+async function start(url) {
+  let others;
+  if (!url) {
+    try {
+      ({
+        data: { url, others }
+      } = await axios.post("https://brawl.dev/api/games", {
+        id: process.env.BRAWL_ID,
+        secret: process.env.BRAWL_SECRET,
 
+        numPlayers: 30,
+        numEasyBots: 0,
+        numMediumBots: 0,
+        numHardBots: 0
+      }));
+    } catch (e) {
+      console.log(e);
+      return;
+    }
+  }
+  console.log(url);
   const ws = new WebSocket(url);
   ws.on("open", function() {
     console.log("connected!");
@@ -13,16 +30,13 @@ async function start() {
   ws.on("message", function(data) {
     const { ring, players, me } = JSON.parse(data);
     console.log(
-      `--Ticks Left: ${ring.ticksLeft} Ring: (${ring.position.x}, ${
+      `--${me} Ticks Left: ${ring.ticksLeft} Ring: (${ring.position.x}, ${
         ring.position.y
       }) Radius: ${ring.radius}--`
     );
     players.forEach((player, index) => {
-      console.log(
-        `${player.alive ? index : "X"} (${player.position.x}, ${
-          player.position.y
-        })`
-      );
+      if (player.alive)
+        console.log(`${index} (${player.position.x}, ${player.position.y})`);
     });
 
     const x = ring.position.x - players[me].position.x;
@@ -42,6 +56,8 @@ async function start() {
   ws.on("close", function() {
     console.log("close");
   });
+
+  return others;
 }
 
 start();
