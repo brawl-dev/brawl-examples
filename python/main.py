@@ -21,10 +21,10 @@ while True:
     except:
         break
     print(
-        "---Ticks Left: {ticksLeft}  Ring: ({position[x]}, {position[y]}) Radius: {radius}---".format(**data['ring']))
+        "---Ticks Left: {ticks}  Ring: ({pos[x]}, {pos[y]}) Radius: {radius}---".format(**data['ring']))
     for (index, player) in enumerate(data['players']):
         if player['alive']:
-            print("{0}  ({position[x]}, {position[y]})".format(
+            print("{0}  ({pos[x]}, {pos[y]})".format(
                 index, **player))
     ws.send(json.dumps({"thrust": 0, "torque": 0}))
 

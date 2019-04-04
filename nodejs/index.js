@@ -30,21 +30,21 @@ async function start(url) {
   ws.on("message", function(data) {
     const { ring, players, me } = JSON.parse(data);
     console.log(
-      `--${me} Ticks Left: ${ring.ticksLeft} Ring: (${ring.position.x}, ${
-        ring.position.y
+      `--${me} Ticks: ${ring.ticks} Ring: (${ring.pos.x}, ${
+        ring.pos.y
       }) Radius: ${ring.radius}--`
     );
     players.forEach((player, index) => {
       if (player.alive)
-        console.log(`${index} (${player.position.x}, ${player.position.y})`);
+        console.log(`${index} (${player.pos.x}, ${player.pos.y})`);
     });
 
-    const x = ring.position.x - players[me].position.x;
-    const y = ring.position.y - players[me].position.y;
+    const x = ring.pos.x - players[me].pos.x;
+    const y = ring.pos.y - players[me].pos.y;
 
     const d = Math.sqrt(x * x + y * y);
     const angle = Math.atan2(y, x);
-    const p = angle - players[0].rotation;
+    const p = angle - players[0].rot;
 
     ws.send(
       JSON.stringify({
@@ -57,7 +57,10 @@ async function start(url) {
     console.log("close");
   });
 
-  return others;
+  return others || [];
 }
 
+start();
+start();
+start();
 start();
