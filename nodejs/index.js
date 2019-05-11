@@ -11,11 +11,7 @@ async function start(url) {
       } = await axios.post("https://brawl.dev/api/games", {
         id: process.env.BRAWL_ID,
         secret: process.env.BRAWL_SECRET,
-
-        numPlayers: 30,
-        numEasyBots: 0,
-        numMediumBots: 0,
-        numHardBots: 0
+        league: process.env.BRAWL_LEAGUE
       }));
     } catch (e) {
       console.log(e);

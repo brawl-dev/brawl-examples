@@ -9,7 +9,7 @@ dotenv.load_dotenv()
 r = requests.post('https://brawl.dev/api/games', json={
     'id': os.getenv("BRAWL_ID"),
     'secret': os.getenv("BRAWL_SECRET"),
-    'numEasyBots': 3
+    'league': os.getenv("BRAWL_LEAGUE")
 })
 data = r.json()
 
