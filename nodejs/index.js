@@ -57,6 +57,3 @@ async function start(url) {
 }
 
 start();
-start();
-start();
-start();
